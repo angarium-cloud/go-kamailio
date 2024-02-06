@@ -5,7 +5,7 @@
 [![GoDoc](https://pkg.go.dev/badge/github.com/angarium-cloud/go-kamailio/v3)](https://pkg.go.dev/github.com/angarium-cloud/go-kamailio/v3)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/angarium-cloud/go-kamailio/blob/master/LICENSE)
 
-Zero dependency Go implementation of Kamailio BINRPC protocol, for invoking RPC functions.
+Zero dependencies Go implementation of Kamailio BINRPC protocol for invoking RPC functions.
 
 This library works with any Kamailio version.
 
@@ -86,7 +86,7 @@ In order to connect remotely, you must listen on TCP or UDP (defaults to local u
 modparam("ctl", "binrpc", "tcp:2049")
 ```
 
-**WARNING**: this will open your Kamailio to the world. Make sure you have a firewall in place, or listen on an internal interface.
+**WARNING**: This will open your Kamailio to the world. Make sure you have a firewall in place, or listen on an internal interface.
 
 ## Limits
 
