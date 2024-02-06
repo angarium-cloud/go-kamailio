@@ -1,3 +1,3 @@
-module github.com/florentchauveau/go-kamailio-binrpc/v3
+module go.angarium.io/kamailio
 
-go 1.18
+go 1.21

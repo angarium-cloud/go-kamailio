@@ -1,19 +1,20 @@
-# go-kamailio-binrpc
-[![Go Report Card](https://goreportcard.com/badge/github.com/florentchauveau/go-kamailio-binrpc)](https://goreportcard.com/report/github.com/florentchauveau/go-kamailio-binrpc)
-![CI](https://github.com/florentchauveau/go-kamailio-binrpc/actions/workflows/tests.yml/badge.svg)
-[![GoDoc](https://pkg.go.dev/badge/github.com/florentchauveau/go-kamailio-binrpc/v3)](https://pkg.go.dev/github.com/florentchauveau/go-kamailio-binrpc/v3)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/florentchauveau/go-kamailio-binrpc/blob/master/LICENSE)
+# go-kamailio
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/angarium-cloud/go-kamailio)](https://goreportcard.com/report/github.com/angarium-cloud/go-kamailio)
+![CI](https://github.com/angarium-cloud/go-kamailio/actions/workflows/tests.yml/badge.svg)
+[![GoDoc](https://pkg.go.dev/badge/github.com/angarium-cloud/go-kamailio/v3)](https://pkg.go.dev/github.com/angarium-cloud/go-kamailio/v3)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/angarium-cloud/go-kamailio/blob/master/LICENSE)
 
 Zero dependency Go implementation of Kamailio BINRPC protocol, for invoking RPC functions.
 
 This library works with any Kamailio version.
 
-go-kamailio-binrpc requires at least Go 1.18.
+`go.angarium.io/kamailio` requires at least Go 1.21.
 
 ## Usage
 
 ```go
-import binrpc "github.com/florentchauveau/go-kamailio-binrpc/v3"
+import binrpc "go.angarium.io/kamailio/binrpc"
 ```
 
 ### Full Example
@@ -25,7 +26,7 @@ import (
 	"fmt"
 	"net"
 
-	binrpc "github.com/florentchauveau/go-kamailio-binrpc/v3"
+	binrpc "go.angarium.io/kamailio/binrpc"
 )
 
 func main() {
@@ -38,7 +39,7 @@ func main() {
 
 	// WritePacket returns the cookie generated
 	cookie, err := binrpc.WritePacket(conn, "tm.stats")
-	
+
 	// for commands that require args, add them as function args
 	// like this: binrpc.WritePacket(conn, "stats.fetch", "all")
 
@@ -87,7 +88,6 @@ modparam("ctl", "binrpc", "tcp:2049")
 
 **WARNING**: this will open your Kamailio to the world. Make sure you have a firewall in place, or listen on an internal interface.
 
-
 ## Limits
 
 For now, only int double string and structs are implemented. Other types will return an error.
@@ -98,4 +98,4 @@ Contributions are welcome.
 
 ## License
 
-This library is distributed under the [MIT](https://github.com/florentchauveau/go-kamailio-binrpc/blob/master/LICENSE) license.
+This library is distributed under the [MIT](https://github.com/angarium-cloud/go-kamailio/blob/master/LICENSE) license.
