@@ -298,9 +298,14 @@ func ReadPacket(r io.Reader, expectedCookie uint32) ([]Record, error) {
 		return nil, errors.New("expected cookie did not match")
 	}
 
-	payloadBytes := make([]byte, header.PayloadLength)
+	return ReadPayload(bufreader, header.PayloadLength)
+}
 
-	if _, err := io.ReadFull(bufreader, payloadBytes); err != nil {
+// ReadPayload reads extactly payloadLength bytes from r and returns records, or an error if one occurred.
+func ReadPayload(r io.Reader, payloadLength int) ([]Record, error) {
+	payloadBytes := make([]byte, payloadLength)
+	_, err := io.ReadFull(r, payloadBytes)
+	if err != nil {
 		return nil, err
 	}
 
@@ -308,7 +313,7 @@ func ReadPacket(r io.Reader, expectedCookie uint32) ([]Record, error) {
 	payload := bytes.NewReader(payloadBytes)
 	records := []Record{}
 
-	for read < header.PayloadLength {
+	for read < payloadLength {
 		record, err := ReadRecord(payload)
 
 		if err != nil {
