@@ -5,11 +5,11 @@
 //
 // The BINRPC protocol is described in "src/modules/ctl/binrpc.h": https://github.com/kamailio/kamailio/blob/master/src/modules/ctl/binrpc.h
 //
-// Limits
+// # Limits
 //
 // The current implementation handles only int, string, and structs containing int or string values. Other types will return an error.
 //
-// Usage
+// # Usage
 //
 // High level functions:
 //
@@ -17,37 +17,36 @@
 //
 // - ReadPacket to read the response
 //
-//   package main
+//	package main
 //
-//   import (
-//   	"fmt"
-//   	"net"
+//	import (
+//		"fmt"
+//		"net"
 //
-//   	binrpc "github.com/florentchauveau/go-kamailio-binrpc/v3"
-//   )
+//		"go.angarium.io/kamailio/binrpc"
+//	)
 //
-//   func main() {
-//   	conn, err := net.Dial("tcp", "localhost:2049")
+//	func main() {
+//		conn, err := net.Dial("tcp", "localhost:2049")
 //
-//   	if err != nil {
-//   		panic(err)
-//   	}
+//		if err != nil {
+//			panic(err)
+//		}
 //
-//   	cookie, err := binrpc.WritePacket(conn, "tm.stats")
+//		cookie, err := binrpc.WritePacket(conn, "tm.stats")
 //
-//   	if err != nil {
-//   		panic(err)
-//   	}
+//		if err != nil {
+//			panic(err)
+//		}
 //
-//   	records, err := binrpc.ReadPacket(conn, cookie)
+//		records, err := binrpc.ReadPacket(conn, cookie)
 //
-//   	if err != nil {
-//   		panic(err)
-//   	}
+//		if err != nil {
+//			panic(err)
+//		}
 //
-//   	fmt.Printf("records = %v", records)
-//   }
-//
+//		fmt.Printf("records = %v", records)
+//	}
 package binrpc
 
 import (
@@ -304,7 +303,6 @@ func ReadHeader(r io.Reader) (*Header, error) {
 	} else if len != 2 {
 		return nil, fmt.Errorf("cannot read header: read=%d/%d", len, 2)
 	}
-
 	if magic := buf[0] >> 4; magic != BinRPCMagic {
 		return nil, fmt.Errorf("magic field did not match, expected %X, got %X", BinRPCMagic, magic)
 	}
@@ -509,8 +507,18 @@ func ReadPacket(r io.Reader, expectedCookie uint32) ([]Record, error) {
 // WritePacket creates a BINRPC packet (header and payload) containing values v, and writes it to w.
 // It returns the cookie generated, or an error if one occurred.
 func WritePacket[T ValidTypes](w io.Writer, values ...T) (uint32, error) {
+	cookie := rand.Uint32()
+	if err := WritePacketWithCookie(cookie, w, values...); err != nil {
+		return 0, err
+	}
+	return cookie, nil
+}
+
+// WritePacketWithCookie creates a BINRPC packet (header and payload) containing values v and the cookie, and writes it to w.
+// It returns an error if one occurred.
+func WritePacketWithCookie[T ValidTypes](cookie uint32, w io.Writer, values ...T) error {
 	if len(values) == 0 {
-		return 0, errors.New("missing values")
+		return errors.New("missing values")
 	}
 
 	var header bytes.Buffer
@@ -520,21 +528,21 @@ func WritePacket[T ValidTypes](w io.Writer, values ...T) (uint32, error) {
 		record, err := CreateRecord(v)
 
 		if err != nil {
-			return 0, err
+			return err
 		}
 
 		if err = record.Encode(&payload); err != nil {
-			return 0, err
+			return err
 		}
 	}
 
-	cookie := rand.Uint32()
-	cookieBytes := intToBytesBE(int(cookie))
 	lengthBE := intToBytesBE(payload.Len())
 
 	if len(lengthBE) > MaxSizeOfLength {
-		return 0, fmt.Errorf("packet length too big: %d/%d bytes", len(lengthBE), MaxSizeOfLength)
+		return fmt.Errorf("packet length too big: %d/%d bytes", len(lengthBE), MaxSizeOfLength)
 	}
+
+	cookieBytes := intToBytesBE(int(cookie))
 
 	header.WriteByte(BinRPCMagic<<4 | BinRPCVersion)
 	header.WriteByte(byte((len(lengthBE)-1)<<2 | len(cookieBytes) - 1))
@@ -544,16 +552,16 @@ func WritePacket[T ValidTypes](w io.Writer, values ...T) (uint32, error) {
 	writer := bufio.NewWriter(w)
 
 	if _, err := writer.Write(header.Bytes()); err != nil {
-		return 0, fmt.Errorf("cannot write header: err=%v", err)
+		return fmt.Errorf("cannot write header: err=%v", err)
 	}
 	if _, err := writer.Write(payload.Bytes()); err != nil {
-		return 0, fmt.Errorf("cannot write payload: err=%v", err)
+		return fmt.Errorf("cannot write payload: err=%v", err)
 	}
 	if err := writer.Flush(); err != nil {
-		return 0, err
+		return err
 	}
 
-	return cookie, nil
+	return nil
 }
 
 // getMinBinarySizeOfInt returns the minimum size in bytes required to store an integer.
