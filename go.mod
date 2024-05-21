@@ -1,3 +1,3 @@
-module go.angarium.io/kamailio
+module go.voiplens.io/kamailio
 
-go 1.21
+go 1.22

@@ -1,20 +1,20 @@
 # go-kamailio
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/angarium-cloud/go-kamailio)](https://goreportcard.com/report/github.com/angarium-cloud/go-kamailio)
-![CI](https://github.com/angarium-cloud/go-kamailio/actions/workflows/tests.yml/badge.svg)
-[![GoDoc](https://pkg.go.dev/badge/github.com/angarium-cloud/go-kamailio/v3)](https://pkg.go.dev/github.com/angarium-cloud/go-kamailio/v3)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/angarium-cloud/go-kamailio/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/voiplens/go-kamailio)](https://goreportcard.com/report/github.com/voiplens/go-kamailio)
+![CI](https://github.com/voiplens/go-kamailio/actions/workflows/tests.yml/badge.svg)
+[![GoDoc](https://pkg.go.dev/badge/github.com/voiplens/go-kamailio/v3)](https://pkg.go.dev/github.com/voiplens/go-kamailio/v3)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/voiplens/go-kamailio/blob/master/LICENSE)
 
 Zero dependencies Go implementation of Kamailio BINRPC protocol for invoking RPC functions.
 
 This library works with any Kamailio version.
 
-`go.angarium.io/kamailio` requires at least Go 1.21.
+`go.voiplens.io/kamailio` requires at least Go 1.21.
 
 ## Usage
 
 ```go
-import binrpc "go.angarium.io/kamailio/binrpc"
+import binrpc "go.voiplens.io/kamailio/binrpc"
 ```
 
 ### Full Example
@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"net"
 
-	binrpc "go.angarium.io/kamailio/binrpc"
+	binrpc "go.voiplens.io/kamailio/binrpc"
 )
 
 func main() {
@@ -98,4 +98,4 @@ Contributions are welcome.
 
 ## License
 
-This library is distributed under the [MIT](https://github.com/angarium-cloud/go-kamailio/blob/master/LICENSE) license.
+This library is distributed under the [MIT](https://github.com/voiplens/go-kamailio/blob/master/LICENSE) license.
